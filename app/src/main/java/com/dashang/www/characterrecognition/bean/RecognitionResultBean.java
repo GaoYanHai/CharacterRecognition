@@ -45,26 +45,27 @@ public class RecognitionResultBean {
     public void setWords_result(List<WorldsBean> words_result) {
         this.words_result = words_result;
     }
-}
 
+    public static class WorldsBean {
 
+        private String worlds;
 
-class WorldsBean {
+        @Override
+        public String toString() {
+            return "WorldsBean{" +
+                    "worlds='" + worlds + '\'' +
+                    '}';
+        }
 
-    private String worlds;
+        public String getWorlds() {
+            return worlds;
+        }
 
-    @Override
-    public String toString() {
-        return "WorldsBean{" +
-                "worlds='" + worlds + '\'' +
-                '}';
+        public void setWorlds(String worlds) {
+            this.worlds = worlds;
+        }
+
     }
 
-    public String getWorlds() {
-        return worlds;
-    }
 
-    public void setWorlds(String worlds) {
-        this.worlds = worlds;
-    }
 }

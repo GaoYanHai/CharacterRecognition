@@ -1,10 +1,11 @@
 package com.dashang.www.characterrecognition.api;
 
-import android.database.Observable;
+//import android.database.Observable;
 
 import com.dashang.www.characterrecognition.bean.AccessTokenBean;
 import com.dashang.www.characterrecognition.bean.RecognitionResultBean;
 
+import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -20,7 +21,7 @@ public interface BaiDuOCRService {
     * */
 
     @POST("oauth/2.0/token")
-    Observable<AccessTokenBean> getAccessToken(@Query("grant_type") String grantType,@Query("client_id") String clientId,@Query("client_secret") String clientSecret);
+    Observable<AccessTokenBean> getAccessToken(@Query("grant_type") String grantType, @Query("client_id") String clientId, @Query("client_secret") String clientSecret);
 
 
 
@@ -32,7 +33,7 @@ public interface BaiDuOCRService {
     *
     * */
 
-    @POST("")
+    @POST("rest/2.0/ocr/v1/general_basic")
     @FormUrlEncoded
     Observable<RecognitionResultBean> getRecognitionResultByImage(@Field("access_token") String accessToken, @Field("image") String image);
 
