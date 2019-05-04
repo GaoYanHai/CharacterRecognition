@@ -1,5 +1,6 @@
 package com.dashang.www.characterrecognition.module;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Base64;
 import android.util.Log;
@@ -13,17 +14,15 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.support.v4.app.ActivityCompat.startActivityForResult;
 
 
 /*
@@ -36,18 +35,21 @@ public class MainPresenter implements MainContract.Presenter {
     private String CLIENT_CREDENTIALS = "client_credentials";
     private String API_KEY = "b0Ckzc8ZPY4xl9lYBklDrAW9";
     private String SECRET_KEY = "B0pG23lTQMxhiOHUUxGTeupBHFti1F1R";
-    private String ACCESS_TOKEN = "client_credentials";
+    private String ACCESS_TOKEN;
+
+
 
     public MainPresenter(MainContract.View mView){
         this.mView = mView;
 
          Retrofit retrofit =new Retrofit.Builder()
-                 .baseUrl("https://api.baidubce.com/")
+                 .baseUrl("https://aip.baidubce.com/")
                  .addConverterFactory(GsonConverterFactory.create())
                  .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                  .build();
         mBaiDuOCRService = retrofit.create(BaiDuOCRService.class);
-
+        //获取登陆token
+        getAccessToken();
 
     }
 
@@ -65,22 +67,23 @@ public class MainPresenter implements MainContract.Presenter {
 
                     @Override
                     public void onSubscribe(Disposable d) {
-
+                        Log.e(TAG, "onSubscribe: " );
                     }
 
                     @Override
                     public void onNext(AccessTokenBean accessTokenBean) {
                         Log.e(TAG, "onNext: "+accessTokenBean.getAccess_token() );
+                        ACCESS_TOKEN = accessTokenBean.getAccess_token();
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.e(TAG, "onError: 请求出错" );
                     }
 
                     @Override
                     public void onComplete() {
-
+                        Log.e(TAG, "onComplete: 请求完成" );
                     }
                 });
 
@@ -108,24 +111,27 @@ public class MainPresenter implements MainContract.Presenter {
                         List<RecognitionResultBean.WorldsBean> worldsResult = recognitionResultBean.getWords_result();
                         for (RecognitionResultBean.WorldsBean words : worldsResult){
                             wordList.add(words.getWorlds());
-                        }
 
-                        ArrayList<String> numbs = RegexUtil.getNumbs(wordList);
+                        }
+                        //从结果中提取符合的字符串显示
+//                        ArrayList<String> numbs = RegexUtil.getNumbs(wordList);
                         StringBuilder s = new StringBuilder();
-                        for (String numb:numbs){
+//                        for (String numb:numbs){
+                        for (String numb:wordList){
                             s.append(numb+"\n");
                         }
+
                         mView.updateUI(s.toString());
                     }
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.e(TAG, "onError: 图片识别错误"+e.toString() );
                     }
 
                     @Override
                     public void onComplete() {
-
+                        Log.e(TAG, "onComplete: 图片识别完成" );
                     }
                 });
 
@@ -144,6 +150,7 @@ public class MainPresenter implements MainContract.Presenter {
         return "";
 
     }
+
 
 
 }

@@ -19,19 +19,19 @@
         android:id="@+id/bt_distinguish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="识别"
+        android:text="从相册中选取并识别"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/bt_takephoto"
         app:layout_constraintTop_toBottomOf="@+id/iv_image"/>
 
     <Button
         android:id="@+id/bt_takephoto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="拍照"
+        android:text="拍照并识别"
         app:layout_constraintLeft_toRightOf="@+id/bt_distinguish"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/iv_image"/>
 
     <TextView
         android:id="@+id/tv_result"
