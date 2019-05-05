@@ -45,12 +45,15 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bt_distinguish"/>
 
-    <!--<ToggleButton-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textOff="关闭"-->
-        <!--android:textOn="开启"-->
-        <!--app:layout_constraintBottom_toBottomOf="parent"/>-->
+    <ToggleButton
+        android:id="@+id/tb_copy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOff="复制到剪贴板"
+        android:textOn="已复制"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
     <!--<Switch-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->

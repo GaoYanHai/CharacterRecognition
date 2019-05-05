@@ -1,6 +1,9 @@
 package com.dashang.www.characterrecognition.module;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -20,18 +23,19 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.dashang.www.characterrecognition.R;
+import com.dashang.www.characterrecognition.utils.ToastUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -45,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     TextView mTv_result;
     @BindView(R.id.bt_takephoto)
     Button mBt_takephoto;
+    @BindView(R.id.tb_copy)
+    ToggleButton mTb_copy;
     private MainPresenter mPresenter;
     private static final int PERMISSIONS_REQUEST_CODE = 1;
     private static final int CAMERA_REQUEST_CODE = 2;
@@ -68,12 +74,23 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 //跳转到相册中选取图片
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, IMAGE_REQUEST_CODE);
+                mTb_copy.setChecked(false);
             }
         });
         mBt_takephoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 takePhoto();
+                mTb_copy.setChecked(false);
+            }
+        });
+        mTb_copy.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (b){
+                    //按钮改变了状态
+                    copyText();
+                }
             }
         });
 
@@ -208,6 +225,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //                Log.e(TAG, "deletePhoto getAbsolutePath: "+files[i].getAbsolutePath() );
             }
         }
+
+    }
+
+
+    public void copyText(){
+        ClipboardManager clipboardManager = (ClipboardManager) getBaseContext().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clipData = ClipData.newPlainText(null, mTv_result.getText());
+        clipboardManager.setPrimaryClip(clipData);
 
     }
 
