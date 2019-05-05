@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +36,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View{
+public class MainActivity extends AppCompatActivity implements MainContract.View {
     @BindView(R.id.iv_image)
     ImageView mIv_image;
     @BindView(R.id.bt_distinguish)
@@ -58,13 +59,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         mPresenter = new MainPresenter(this);
-
+        //使textview中的内容可以滑动
+        mTv_result.setMovementMethod(ScrollingMovementMethod.getInstance());
         mPresenter.getAccessToken();
         mBt_distinguish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //跳转到相册中选取图片
-                Intent intent = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, IMAGE_REQUEST_CODE);
             }
         });
@@ -78,13 +80,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     }
 
     private void takePhoto() {
-        if (!hasPermission()){
+        if (!hasPermission()) {
             return;
         }
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath()+"/image";
-        if (new File(path).exists()){
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/image";
+        if (new File(path).exists()) {
             try {
                 new File(path).createNewFile();
             } catch (IOException e) {
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             String authority = getPackageName() + ".provider";
             //应用之间共享文件
             imageUrl = FileProvider.getUriForFile(this, authority, mTmpFile);
-            Log.e(TAG, "takePhoto: "+imageUrl );
+            Log.e(TAG, "takePhoto: " + imageUrl);
         } else {
             imageUrl = Uri.fromFile(mTmpFile);
         }
@@ -126,13 +128,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private boolean hasPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ContextCompat.checkSelfPermission(this,Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA}, PERMISSIONS_REQUEST_CODE);
             return false;
-        }else {
+        } else {
             return true;
         }
     }
+
     // 授予权限的结果
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -155,8 +158,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             mIv_image.setImageBitmap(photo);
         }
 
-        if (requestCode==IMAGE_REQUEST_CODE){
-            if (data!=null){
+        if (requestCode == IMAGE_REQUEST_CODE) {
+            if (data != null) {
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
                     mPresenter.getRecognitionResultByImage(bitmap);
@@ -168,8 +171,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
     }
 
-    public void deletePhoto(){
-        File file=new File(Environment.getExternalStorageDirectory().getAbsolutePath()+"/image");
+    public void deletePhoto() {
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/image");
 //        File[] files=file.listFiles();
 //        if (files == null){
 //            Log.e("error","空目录");
@@ -180,18 +183,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //        for(int i =0;i<files.length;i++){
 //            s.add(files[i].getAbsolutePath());
 //        }
-         if (file.delete()) {
-             Log.e(TAG, "deletePhoto: 删除成功");
-        }else {
-             Log.e(TAG, "deletePhoto: 删除失败");
-         }
 
-//        if (file.isDirectory()){
-//            //处理目录
-//            File[] files = file.listFiles();
-//            for (int i=0;i<files.length;i++){
+        if (file.isDirectory()) {
+            //处理目录
+            File[] files = file.listFiles();
+
+            for (int i = 0; i < files.length; i++) {
+                File file1 = new File(files[i].getAbsolutePath());
+
+                if (file1.delete()) {
+                    Log.e(TAG, "deletePhoto: 删除成功");
+                } else {
+                    Log.e(TAG, "deletePhoto: 删除失败");
+                }
+
 //                    deleteFile(files[i].getAbsolutePath());
-//                if (deleteFile(files[i].getPath())){
+//                if (deleteFile(files[i])){
 //                    Log.e(TAG, "deletePhoto: 删除成功");
 //                }else {
 //                    Log.e(TAG, "deletePhoto: 删除失败" );
@@ -199,8 +206,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //                Log.e(TAG, "deletePhoto getName: "+files[i].getName() );
 //                Log.e(TAG, "deletePhoto getPath: "+files[i].getPath() );
 //                Log.e(TAG, "deletePhoto getAbsolutePath: "+files[i].getAbsolutePath() );
-//            }
-//        }
+            }
+        }
 
     }
 
@@ -209,6 +216,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        deletePhoto();
+        //deletePhoto();
     }
 }

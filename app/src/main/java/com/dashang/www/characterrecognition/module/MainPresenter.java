@@ -48,8 +48,6 @@ public class MainPresenter implements MainContract.Presenter {
                  .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                  .build();
         mBaiDuOCRService = retrofit.create(BaiDuOCRService.class);
-        //获取登陆token
-        getAccessToken();
 
     }
 
@@ -107,19 +105,26 @@ public class MainPresenter implements MainContract.Presenter {
 
                     @Override
                     public void onNext(RecognitionResultBean recognitionResultBean) {
-                        ArrayList<String> wordList = new ArrayList<>();
-                        List<RecognitionResultBean.WorldsBean> worldsResult = recognitionResultBean.getWords_result();
-                        for (RecognitionResultBean.WorldsBean words : worldsResult){
-                            wordList.add(words.getWorlds());
-
-                        }
+//                        ArrayList<String> wordList = new ArrayList<>();
+//                        List<RecognitionResultBean.WorldsBean> worldsResult = recognitionResultBean.getWords_result();
+//                        for (RecognitionResultBean.WorldsBean words : worldsResult){
+//                            wordList.add(words.getWorlds());
+//
+//                        }
                         //从结果中提取符合的字符串显示
 //                        ArrayList<String> numbs = RegexUtil.getNumbs(wordList);
-                        StringBuilder s = new StringBuilder();
+//                        StringBuilder s = new StringBuilder();
 //                        for (String numb:numbs){
-                        for (String numb:wordList){
-                            s.append(numb+"\n");
+//                        for (String numb:wordList){
+//                            s.append(numb+"\n");
+//                        }
+
+                        StringBuilder s = new StringBuilder();
+                        List<RecognitionResultBean.WorldsBean> wordsResult = recognitionResultBean.getWords_result();
+                        for (RecognitionResultBean.WorldsBean words:wordsResult) {
+                            s.append(words.getWorlds());
                         }
+                        Log.e(TAG, "onNext: 识别结果"+s.toString() );
 
                         mView.updateUI(s.toString());
                     }

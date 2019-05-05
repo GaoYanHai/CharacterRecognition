@@ -1,45 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".module.MainActivity">
+    <android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".module.MainActivity">
 
-    <ImageView
-        android:id="@+id/iv_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="wrap_content"
+            android:layout_height="300dp"
+            android:background="@mipmap/bar"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    <Button
-        android:id="@+id/bt_distinguish"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="从相册中选取并识别"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/bt_takephoto"
-        app:layout_constraintTop_toBottomOf="@+id/iv_image"/>
+        <Button
+            android:id="@+id/bt_distinguish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="从相册中选取并识别"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/bt_takephoto"
+            app:layout_constraintTop_toBottomOf="@+id/iv_image"/>
 
-    <Button
-        android:id="@+id/bt_takephoto"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="拍照并识别"
-        app:layout_constraintLeft_toRightOf="@+id/bt_distinguish"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/iv_image"/>
+        <Button
+            android:id="@+id/bt_takephoto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="拍照并识别"
+            app:layout_constraintLeft_toRightOf="@+id/bt_distinguish"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_image"/>
 
-    <TextView
-        android:id="@+id/tv_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bt_distinguish"/>
+        <TextView
+            android:id="@+id/tv_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="识别结果"
+            android:layout_marginTop="20dp"
+            android:scrollbars="vertical"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bt_distinguish"/>
 
+    <!--<ToggleButton-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textOff="关闭"-->
+        <!--android:textOn="开启"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"/>-->
+    <!--<Switch-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@null"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"/>-->
 
-</android.support.constraint.ConstraintLayout>
+    <!--<android.support.v7.widget.SwitchCompat-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--app:layout_constraintRight_toRightOf="parent"-->
+        <!--app:layout_constraintBottom_toBottomOf="parent"/>-->
+
+    </android.support.constraint.ConstraintLayout>
+
