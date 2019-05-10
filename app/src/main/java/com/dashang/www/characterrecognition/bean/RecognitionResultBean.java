@@ -46,23 +46,27 @@ public class RecognitionResultBean {
         this.words_result = words_result;
     }
 
-    public static class WorldsBean {
 
-        private String worlds;
+
+
+
+     public class WorldsBean {
+
+        private String words;
 
         @Override
         public String toString() {
             return "WorldsBean{" +
-                    "worlds='" + worlds + '\'' +
+                    "worlds='" + words + '\'' +
                     '}';
         }
 
         public String getWorlds() {
-            return worlds;
+            return words;
         }
 
-        public void setWorlds(String worlds) {
-            this.worlds = worlds;
+        public void setWorlds(String words) {
+            this.words = words;
         }
 
     }

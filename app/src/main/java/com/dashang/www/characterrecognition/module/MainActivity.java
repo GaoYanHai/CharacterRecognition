@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 //跳转到相册中选取图片
                 Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, IMAGE_REQUEST_CODE);
+                mTb_copy.setClickable(true);
                 mTb_copy.setChecked(false);
             }
         });
@@ -81,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             @Override
             public void onClick(View view) {
                 takePhoto();
+                mTb_copy.setClickable(true);
                 mTb_copy.setChecked(false);
             }
         });
@@ -213,13 +217,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                 } else {
                     Log.e(TAG, "deletePhoto: 删除失败");
                 }
-
-//                    deleteFile(files[i].getAbsolutePath());
-//                if (deleteFile(files[i])){
-//                    Log.e(TAG, "deletePhoto: 删除成功");
-//                }else {
-//                    Log.e(TAG, "deletePhoto: 删除失败" );
-//                }
 //                Log.e(TAG, "deletePhoto getName: "+files[i].getName() );
 //                Log.e(TAG, "deletePhoto getPath: "+files[i].getPath() );
 //                Log.e(TAG, "deletePhoto getAbsolutePath: "+files[i].getAbsolutePath() );
@@ -232,7 +229,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void copyText(){
         ClipboardManager clipboardManager = (ClipboardManager) getBaseContext().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clipData = ClipData.newPlainText(null, mTv_result.getText());
-        clipboardManager.setPrimaryClip(clipData);
+        if (!TextUtils.isEmpty(clipData.toString())){
+            clipboardManager.setPrimaryClip(clipData);
+            mTb_copy.setClickable(false);
+            Log.e(TAG, "copyText: 内容复制成功！" );
+        }else {
+            mTb_copy.setChecked(false);
+            ToastUtil.showShort(getApplicationContext(),"复制内容为空！");
+        }
 
     }
 

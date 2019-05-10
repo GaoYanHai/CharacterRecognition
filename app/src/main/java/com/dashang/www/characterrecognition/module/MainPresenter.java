@@ -11,6 +11,8 @@ import com.dashang.www.characterrecognition.bean.RecognitionResultBean;
 import com.dashang.www.characterrecognition.utils.RegexUtil;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +50,6 @@ public class MainPresenter implements MainContract.Presenter {
                  .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                  .build();
         mBaiDuOCRService = retrofit.create(BaiDuOCRService.class);
-
     }
 
 
@@ -94,6 +95,11 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void getRecognitionResultByImage(Bitmap bitmap) {
         String encodeResult = bitmapToString(bitmap);
+
+        //String imgStr = Base64Util.encode(imgData);
+        //final String params = URLEncoder.encode("image", "UTF-8") + "=" + URLEncoder.encode(imgStr, "UTF-8");
+        //String encode = URLEncoder.encode(encodeResult);
+
         mBaiDuOCRService.getRecognitionResultByImage(ACCESS_TOKEN,encodeResult)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -122,11 +128,14 @@ public class MainPresenter implements MainContract.Presenter {
                         StringBuilder s = new StringBuilder();
                         List<RecognitionResultBean.WorldsBean> wordsResult = recognitionResultBean.getWords_result();
                         for (RecognitionResultBean.WorldsBean words:wordsResult) {
-                            s.append(words.getWorlds());
+                                s.append(words.getWorlds());
                         }
-                        Log.e(TAG, "onNext: 识别结果"+s.toString() );
-
                         mView.updateUI(s.toString());
+
+                        Log.e(TAG, "onNext: 识别结果"+recognitionResultBean.getWords_result());
+                        Log.e(TAG, "onNext: 识别结果码"+recognitionResultBean.getLog_id() );
+                        Log.e(TAG, "onNext: 识别结果数组"+recognitionResultBean.getWords_result_num() );
+
                     }
 
                     @Override
