@@ -138,18 +138,22 @@ public class MainPresenter implements MainContract.Presenter {
                         if (switchBoolean){
                             //获取滑动开关的状态
                             //从结果中提取符合的字符串显示
-//                        ArrayList<String> numbs = RegexUtil.getNumbs(wordsResult);
-//                        StringBuilder s = new StringBuilder();
-//                        for (String numb:numbs) {
-//                            for (String numb : wordList) {
-//                                s.append(numb + "\n");
-//                            }
-//                        }
+
                             ArrayList<String> numbs = RegexUtil.getNumbs(wordList);
+                            StringBuilder regexS = new StringBuilder();
                             for (String number:numbs){
-                                s.append(number);
+                                regexS.append(number);
                             }
-                            mView.updateUI("识别的彩票号码是"+s.toString());
+
+//                            for (int i=0;i<wordsResult.size();i++){
+//                                RecognitionResultBean.WorldsBean worldsBean = wordsResult.get(i);
+//                                String worlds = worldsBean.getWorlds();
+//                                if (worlds.contains("期")||worlds.contains("蓝球")||worlds.contains("红球")){
+//                                    regexS.append(worlds+"\n");
+//                                }
+//                            }
+
+                            mView.updateUI("识别的彩票号码是： "+regexS.toString());
 
                         }else {
                             mView.updateUI(s.toString());
