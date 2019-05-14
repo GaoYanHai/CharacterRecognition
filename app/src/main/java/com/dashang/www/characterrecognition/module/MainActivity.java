@@ -27,10 +27,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.dashang.www.characterrecognition.R;
+import com.dashang.www.characterrecognition.utils.SharedPreferencesUtil;
 import com.dashang.www.characterrecognition.utils.ToastUtil;
 
 import java.io.File;
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     Button mBt_takephoto;
     @BindView(R.id.tb_copy)
     ToggleButton mTb_copy;
+    @BindView(R.id.sw_contrast)
+    Switch mSw_contrast;
     private MainPresenter mPresenter;
     private static final int PERMISSIONS_REQUEST_CODE = 1;
     private static final int CAMERA_REQUEST_CODE = 2;
@@ -61,11 +65,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private static final String TAG = "MainActivity";
     private int IMAGE_REQUEST_CODE = 3;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mSw_contrast.setChecked(SharedPreferencesUtil.getBoolean(this,"SWITCH_STATE",false));
         mPresenter = new MainPresenter(this);
         //使textview中的内容可以滑动
         mTv_result.setMovementMethod(ScrollingMovementMethod.getInstance());
@@ -95,6 +101,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
                     //按钮改变了状态
                     copyText();
                 }
+            }
+        });
+
+        mSw_contrast.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                Log.e(TAG, "onCheckedChanged:  状态改变了"+b );
+                SharedPreferencesUtil.putBoolean(MainActivity.this,"SWITCH_STATE",b);
             }
         });
 
@@ -175,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST_CODE) {
             Bitmap photo = BitmapFactory.decodeFile(mTmpFile.getAbsolutePath());
-            mPresenter.getRecognitionResultByImage(photo);
+            mPresenter.getRecognitionResultByImage(photo,this);
             mIv_image.setImageBitmap(photo);
         }
 
@@ -183,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             if (data != null) {
                 try {
                     Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(data.getData()));
-                    mPresenter.getRecognitionResultByImage(bitmap);
+                    mPresenter.getRecognitionResultByImage(bitmap,this);
                     mIv_image.setImageBitmap(bitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

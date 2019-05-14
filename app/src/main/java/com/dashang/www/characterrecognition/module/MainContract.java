@@ -1,5 +1,6 @@
 package com.dashang.www.characterrecognition.module;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 
 /*
@@ -18,7 +19,7 @@ public interface MainContract {
     interface Presenter{
         //获取数据
         void getAccessToken();
-        void getRecognitionResultByImage(Bitmap bitmap);
+        void getRecognitionResultByImage(Bitmap bitmap, Context context);
 
     }
 }

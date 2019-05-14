@@ -1,5 +1,6 @@
 package com.dashang.www.characterrecognition.module;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Base64;
@@ -9,6 +10,8 @@ import com.dashang.www.characterrecognition.api.BaiDuOCRService;
 import com.dashang.www.characterrecognition.bean.AccessTokenBean;
 import com.dashang.www.characterrecognition.bean.RecognitionResultBean;
 import com.dashang.www.characterrecognition.utils.RegexUtil;
+import com.dashang.www.characterrecognition.utils.SharedPreferencesUtil;
+import com.dashang.www.characterrecognition.utils.ToastUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -78,6 +81,7 @@ public class MainPresenter implements MainContract.Presenter {
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "onError: 请求出错" );
+                        mView.dataError(e);
                     }
 
                     @Override
@@ -93,7 +97,7 @@ public class MainPresenter implements MainContract.Presenter {
     }
 
     @Override
-    public void getRecognitionResultByImage(Bitmap bitmap) {
+    public void getRecognitionResultByImage(Bitmap bitmap, final Context context) {
         String encodeResult = bitmapToString(bitmap);
 
         //String imgStr = Base64Util.encode(imgData);
@@ -111,36 +115,52 @@ public class MainPresenter implements MainContract.Presenter {
 
                     @Override
                     public void onNext(RecognitionResultBean recognitionResultBean) {
-//                        ArrayList<String> wordList = new ArrayList<>();
+                        ArrayList<String> wordList = new ArrayList<>();
 //                        List<RecognitionResultBean.WorldsBean> worldsResult = recognitionResultBean.getWords_result();
 //                        for (RecognitionResultBean.WorldsBean words : worldsResult){
 //                            wordList.add(words.getWorlds());
 //
 //                        }
-                        //从结果中提取符合的字符串显示
-//                        ArrayList<String> numbs = RegexUtil.getNumbs(wordList);
-//                        StringBuilder s = new StringBuilder();
-//                        for (String numb:numbs){
-//                        for (String numb:wordList){
-//                            s.append(numb+"\n");
-//                        }
+
 
                         StringBuilder s = new StringBuilder();
                         List<RecognitionResultBean.WorldsBean> wordsResult = recognitionResultBean.getWords_result();
                         for (RecognitionResultBean.WorldsBean words:wordsResult) {
                                 s.append(words.getWorlds());
+                                wordList.add(words.getWorlds());
                         }
-                        mView.updateUI(s.toString());
+
 
                         Log.e(TAG, "onNext: 识别结果"+recognitionResultBean.getWords_result());
                         Log.e(TAG, "onNext: 识别结果码"+recognitionResultBean.getLog_id() );
                         Log.e(TAG, "onNext: 识别结果数组"+recognitionResultBean.getWords_result_num() );
+                        boolean switchBoolean = SharedPreferencesUtil.getBoolean(context, "SWITCH_STATE", false);
+                        if (switchBoolean){
+                            //获取滑动开关的状态
+                            //从结果中提取符合的字符串显示
+//                        ArrayList<String> numbs = RegexUtil.getNumbs(wordsResult);
+//                        StringBuilder s = new StringBuilder();
+//                        for (String numb:numbs) {
+//                            for (String numb : wordList) {
+//                                s.append(numb + "\n");
+//                            }
+//                        }
+                            ArrayList<String> numbs = RegexUtil.getNumbs(wordList);
+                            for (String number:numbs){
+                                s.append(number);
+                            }
+                            mView.updateUI("识别的彩票号码是"+s.toString());
+
+                        }else {
+                            mView.updateUI(s.toString());
+                        }
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.e(TAG, "onError: 图片识别错误"+e.toString() );
+                        mView.dataError(e);
                     }
 
                     @Override
