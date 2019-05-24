@@ -17,14 +17,14 @@
             app:layout_constraintTop_toTopOf="parent"
             />
 
-        <Button
-            android:id="@+id/bt_distinguish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="相册"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/bt_takephoto"
-            app:layout_constraintTop_toBottomOf="@+id/iv_image"/>
+    <Button
+        android:id="@+id/bt_distinguish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="相册"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/bt_takephoto"
+        app:layout_constraintTop_toBottomOf="@+id/iv_image"/>
 
         <Button
             android:id="@+id/bt_takephoto"
@@ -35,17 +35,17 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_image"/>
 
-        <TextView
-            android:id="@+id/tv_result"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="识别结果"
-            android:layout_marginTop="20dp"
-            android:scrollbars="vertical"
-            android:padding="20dp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bt_distinguish"/>
+    <TextView
+        android:id="@+id/tv_result"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:padding="10dp"
+        android:scrollbars="vertical"
+        android:text="识别结果"
+        app:layout_constraintBottom_toTopOf="@+id/tb_copy"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sw_contrast"/>
 
     <ToggleButton
         android:id="@+id/tb_copy"
@@ -68,12 +68,14 @@
         app:layout_constraintTop_toBottomOf="@+id/bt_distinguish"
         app:layout_constraintBottom_toTopOf="@+id/bt_distinguish"/>
 
+
     <!--<android.support.v7.widget.SwitchCompat-->
         <!--android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content"-->
         <!--app:layout_constraintLeft_toLeftOf="parent"-->
         <!--app:layout_constraintRight_toRightOf="parent"-->
         <!--app:layout_constraintBottom_toBottomOf="parent"/>-->
+
 
     </android.support.constraint.ConstraintLayout>
 

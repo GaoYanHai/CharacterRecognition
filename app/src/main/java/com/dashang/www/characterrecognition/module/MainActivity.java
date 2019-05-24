@@ -1,9 +1,11 @@
 package com.dashang.www.characterrecognition.module;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -64,7 +66,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     private Uri imageUrl;
     private static final String TAG = "MainActivity";
     private int IMAGE_REQUEST_CODE = 3;
-
+    private AlertDialog alertDialog;
+    private int selected;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,9 +76,14 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         ButterKnife.bind(this);
         mSw_contrast.setChecked(SharedPreferencesUtil.getBoolean(this,"SWITCH_STATE",false));
         mPresenter = new MainPresenter(this);
+        if (SharedPreferencesUtil.getBoolean(this,"SWITCH_STATE",false)){
+            mPresenter.getOpenJson( SharedPreferencesUtil.getString(MainActivity.this,"TYPE_CAIPIAO","dlt.json"));
+        }
         //使textview中的内容可以滑动
         mTv_result.setMovementMethod(ScrollingMovementMethod.getInstance());
         mPresenter.getAccessToken();
+
+
         mBt_distinguish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,6 +117,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 Log.e(TAG, "onCheckedChanged:  状态改变了"+b );
                 SharedPreferencesUtil.putBoolean(MainActivity.this,"SWITCH_STATE",b);
+                //打开开关的时候弹出单选框
+                if (b){
+                    showSingleAlertDialog();
+                }
             }
         });
 
@@ -253,6 +265,86 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         }
 
     }
+
+    //展示单选框按钮
+    public void showSingleAlertDialog(){
+
+        final String[] items = {"超级大乐透","福彩3d","七乐彩","七星彩","双色球","四场进球彩"};
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setTitle("请选择彩票类型：");
+        alertBuilder.setSingleChoiceItems(items, SharedPreferencesUtil.getInt(MainActivity.this,"SELECTED_ITEM",0),
+                new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Toast.makeText(MainActivity.this, items[index], Toast.LENGTH_SHORT).show();
+                selected = i;
+                //ToastUtil.showShort(getApplicationContext(),"选择的是"+i);
+            }
+        });
+        alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.e(TAG, "onClick: "+i );
+
+                switch (selected){
+                    case 0:
+                        mPresenter.getOpenJson("dlt.json");
+                        SharedPreferencesUtil.putString(MainActivity.this,"TYPE_CAIPIAO","dlt.json");
+                        SharedPreferencesUtil.putInt(MainActivity.this,"SELECTED_ITEM",0);
+                        break;
+                    case 1:
+                        mPresenter.getOpenJson("fc3d.json");
+                        SharedPreferencesUtil.putString(MainActivity.this,"TYPE_CAIPIAO","fc3d.json");
+                        SharedPreferencesUtil.putInt(MainActivity.this,"SELECTED_ITEM",1);
+                        //Log.e(TAG, "onClick: 第2个选项" );
+                        break;
+                    case 2:
+                        mPresenter.getOpenJson("qlc.json");
+                        SharedPreferencesUtil.putString(MainActivity.this,"TYPE_CAIPIAO","qlc.json");
+                        SharedPreferencesUtil.putInt(MainActivity.this,"SELECTED_ITEM",2);
+                        //Log.e(TAG, "onClick: 第3个选项" );
+                        break;
+                    case 3:
+                        mPresenter.getOpenJson("qxc.json");
+                        SharedPreferencesUtil.putString(MainActivity.this,"TYPE_CAIPIAO","qxc.json");
+                        SharedPreferencesUtil.putInt(MainActivity.this,"SELECTED_ITEM",3);
+                        //Log.e(TAG, "onClick: 第4个选项" );
+                        break;
+                    case 4:
+                        mPresenter.getOpenJson("ssq.json");
+                        SharedPreferencesUtil.putString(MainActivity.this,"TYPE_CAIPIAO","ssq.json");
+                        SharedPreferencesUtil.putInt(MainActivity.this,"SELECTED_ITEM",4);
+                        //Log.e(TAG, "onClick: 第5个选项" );
+                        break;
+                    case 5:
+                        mPresenter.getOpenJson("zcjqc.json");
+                        SharedPreferencesUtil.putString(MainActivity.this,"TYPE_CAIPIAO","zcjqc.json");
+                        SharedPreferencesUtil.putInt(MainActivity.this,"SELECTED_ITEM",5);
+                        //Log.e(TAG, "onClick: 第6个选项" );
+                        break;
+                }
+
+                // 关闭提示框
+                alertDialog.dismiss();
+            }
+        });
+
+        alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Log.e(TAG, "onClick: "+i );
+                // 关闭提示框
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog = alertBuilder.create();
+        alertDialog.show();
+    }
+
+
 
 
     //活动销毁时将照片删除

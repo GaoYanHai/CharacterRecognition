@@ -29,7 +29,7 @@ public interface BaiDuOCRService {
     * 通过图片获取文字内的信息
     * accessToKen  通过请求获取的token
     * image 图像数据base64编码后进行urlencode后的String
-    * 不能进行urlencode编码   调用不成功
+    *     @FormUrlEncoded的作用 先进行utf-8编码  在进行url编码
     * observable对象用于rxjava,从RecognitionResultBean中可以获得图片文字识别的信息
     *
     * */

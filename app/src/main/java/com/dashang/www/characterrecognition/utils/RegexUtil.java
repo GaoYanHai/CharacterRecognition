@@ -31,11 +31,8 @@ public class RegexUtil {
                 Log.e(TAG, "getNumbs: 正则表达式" );
             }
             if (hasFound){
-                Log.e(TAG, "getNumbs: 篮球1" );
                 if (Pattern.matches(regEx2, word)) {
-                    Log.e(TAG, "getNumbs: 篮球2" );
                     numbs.add(word+"\n");
-                    Log.e(TAG, "getNumbs: 篮球3" );
                 }
                 if (Pattern.matches(regEx3,word)){
                     numbs.add(word);
