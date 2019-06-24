@@ -31,7 +31,8 @@ public interface BaiDuOCRService {
     * image 图像数据base64编码后进行urlencode后的String
     *     @FormUrlEncoded的作用 先进行utf-8编码  在进行url编码
     * observable对象用于rxjava,从RecognitionResultBean中可以获得图片文字识别的信息
-    *
+    * general_basic  通用版
+    * accurate_basic  高精度版
     * */
 
     @POST("rest/2.0/ocr/v1/general_basic")

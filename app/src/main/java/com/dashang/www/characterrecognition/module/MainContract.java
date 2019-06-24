@@ -20,6 +20,7 @@ public interface MainContract {
         //获取数据
         void getAccessToken();
         void getRecognitionResultByImage(Bitmap bitmap, Context context);
+        void getOpenJson(String format);
 
     }
 }
